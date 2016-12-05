@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 namespace CBD
 {
 
-    public class NodeList<T> : Collection<Node<T>>
-    {
+    public class NodeList<T> : Collection<Node<T>> {
         public NodeList() : base() { }
         public NodeList(int initialSize) {
             // Add the specified number of items
@@ -54,8 +53,7 @@ namespace CBD
         }
     }
 
-    public class GraphNode<T> : CBD.Node<T>
-    {
+    public class GraphNode<T> : CBD.Node<T> {
         private List<double> costs;
 
         public GraphNode() : base() { }
@@ -77,9 +75,7 @@ namespace CBD
         }
     }
 
-
-    public class Graph<T> : IEnumerable<T>
-    {
+    public class Graph<T> : IEnumerable<T> {
         private NodeList<T> nodeSet;
 
         public Graph() : this(null) { }
@@ -127,17 +123,8 @@ namespace CBD
             }
             return true;
         }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
+        public IEnumerator<T> GetEnumerator() { throw new NotImplementedException(); }
+        IEnumerator IEnumerable.GetEnumerator() { throw new NotImplementedException(); }
         public NodeList<T> Nodes { get { return nodeSet; } }
         public int Count { get { return nodeSet.Count; } }
     }
