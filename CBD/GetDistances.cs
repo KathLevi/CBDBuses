@@ -8,10 +8,8 @@ using System.Xml.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
 
 
-namespace CBD
-{
-    class GetDistances
-    {
+namespace CBD {
+    class GetDistances {
         public static Excel.Application my_excel = new Excel.Application();
         public static Excel.Workbook my_book = my_excel.Workbooks.Open(@"CBD\Locations.xlsx", 0, false, 5, "", "", 
             false, Excel.XlPlatform.xlWindows, "", true, false, 0, true, false, false);
@@ -32,10 +30,9 @@ namespace CBD
             }
             catch { return distance; }
         }
-
         //Location Names must be in column A
         public void InitializeGraphWithLocationsAndAddresses() {
-            Excel.Range my_location_range = locations.Range["A2:A42"];
+            Excel.Range my_location_range = locations.Range["A2:A41"];
             int ctr = 2;
             if (my_location_range != null) {
                 foreach (Excel.Range r in my_location_range) {
@@ -44,10 +41,10 @@ namespace CBD
                     Tuple<string, string> temp_tuple = new Tuple<string, string>(l, cell_value);
                     if (!(location_graph.Contains(temp_tuple)))
                         location_graph.AddNode(temp_tuple);
+                    ctr++;
                 }
             }
         }
-
         //Requires a list of addresses to map locations and distances
         public void InitializeLocationGraphWeights(List<string> l) {
             foreach (GraphNode<Tuple<string, string>> g in location_graph.GetNodeSet()) {
@@ -57,7 +54,6 @@ namespace CBD
                 }
             }
         }
-
         protected string FileGetContents(string fileName) {
             string sContents = string.Empty;
             string me = string.Empty;

@@ -6,9 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CBD
-{
-
+namespace CBD {
     public class NodeList<T> : Collection<Node<T>> {
         public NodeList() : base() { }
         public NodeList(int initialSize) {
@@ -25,12 +23,10 @@ namespace CBD
             return null;
         }
     }
-
     public class Node<T> {
         // Private member-variables
         private T data;
         private NodeList<T> neighbors = null;
-
         public Node() { }
         public Node(T data) : this(data, null) { }
         public Node(T data, NodeList<T> neighbors) {
@@ -52,10 +48,8 @@ namespace CBD
             return false;
         }
     }
-
     public class GraphNode<T> : CBD.Node<T> {
         private List<double> costs;
-
         public GraphNode() : base() { }
         public GraphNode(T value) : base(value) { }
         public GraphNode(T value, CBD.NodeList<T> neighbors) : base(value, neighbors) { }
@@ -74,10 +68,8 @@ namespace CBD
             }
         }
     }
-
     public class Graph<T> : IEnumerable<T> {
         private NodeList<T> nodeSet;
-
         public Graph() : this(null) { }
         public Graph(NodeList<T> nodeSet) {
             if (nodeSet == null)
