@@ -46,11 +46,17 @@ namespace CBD
             get { return neighbors; }
             set { neighbors = value; }
         }
+        public bool HasNeighbor(T value) {
+            foreach (Node<T> i in Neighbors) {
+                if (i.Value.Equals(value)) return true;
+            }
+            return false;
+        }
     }
 
     public class GraphNode<T> : CBD.Node<T>
     {
-        private List<int> costs;
+        private List<double> costs;
 
         public GraphNode() : base() { }
         public GraphNode(T value) : base(value) { }
@@ -62,10 +68,10 @@ namespace CBD
                 return base.Neighbors;
             }
         }
-        public List<int> Costs {
+        public List<double> Costs {
             get {
                 if (costs == null)
-                    costs = new List<int>();
+                    costs = new List<double>();
                 return costs;
             }
         }
@@ -83,6 +89,7 @@ namespace CBD
             else
                 this.nodeSet = nodeSet;
         }
+        public NodeList<T> GetNodeSet() { return nodeSet; }
         public void AddNode(GraphNode<T> node)  {
             // adds a node to the graph
             nodeSet.Add(node);
@@ -91,11 +98,11 @@ namespace CBD
             // adds a node to the graph
             nodeSet.Add(new GraphNode<T>(value));
         }
-        public void AddDirectedEdge(GraphNode<T> from, GraphNode<T> to, int cost) {
+        public void AddDirectedEdge(GraphNode<T> from, GraphNode<T> to, double cost) {
             from.Neighbors.Add(to);
             from.Costs.Add(cost);
         }
-        public void AddUndirectedEdge(GraphNode<T> from, GraphNode<T> to, int cost) {
+        public void AddUndirectedEdge(GraphNode<T> from, GraphNode<T> to, double cost) {
             from.Neighbors.Add(to);
             from.Costs.Add(cost);
             to.Neighbors.Add(from);
