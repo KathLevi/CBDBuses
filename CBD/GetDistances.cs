@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Object;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -51,7 +50,12 @@ namespace CBD
 
         //Requires a list of addresses to map locations and distances
         public void InitializeLocationGraphWeights(List<string> l) {
-            
+            foreach (GraphNode<Tuple<string, string>> g in location_graph.GetNodeSet()) {
+                foreach (GraphNode<Tuple<string, string>> h in location_graph.GetNodeSet()) {
+                    if (!(g.Value.Item1 == h.Value.Item1))
+                        location_graph.AddDirectedEdge(g, h, GetDistanceFromTo(g.Value.Item2, h.Value.Item2));
+                }
+            }
         }
 
         protected string FileGetContents(string fileName) {
