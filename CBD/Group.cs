@@ -9,8 +9,8 @@ namespace CBD {
         private string group_name;
         private int group_size;
 
-        Group() { }
-        Group(string _name, int _size) {
+        public Group() { }
+        public Group(string _name, int _size) {
             group_name = _name;
             group_size = _size;
         }
@@ -23,6 +23,17 @@ namespace CBD {
         }
         public static bool operator !=(Group g1, Group g2) {
             if (g1.GetGroupName() != g2.GetGroupName())
+                return true;
+            return false;
+        }
+        public static bool operator <(Group lhs, Group rhs) {
+            if (lhs.GetSizeOf() < rhs.GetSizeOf())
+                return true;
+            return false;
+        }
+        public static bool operator >(Group lhs, Group rhs)
+        {
+            if (lhs.GetSizeOf() > rhs.GetSizeOf())
                 return true;
             return false;
         }

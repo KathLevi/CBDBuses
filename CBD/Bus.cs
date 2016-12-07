@@ -10,10 +10,11 @@ namespace CBD {
         private int bus_number;
         private int bus_curr_on_board = 0;
         private int bus_capacity;
-        List<Group> groups_on_bus;
+        private double distance_traveled = 0;
+        List<Group> groups_on_bus = new List<Group>();
 
-        Bus() { }
-        Bus(int _num, int _cap) {
+        public Bus() { }
+        public Bus(int _num, int _cap) {
             bus_number = _num;
             bus_capacity = _cap;
         }
@@ -22,6 +23,8 @@ namespace CBD {
         public int GetBusCurr() { return bus_curr_on_board; }
         public void AddToBusCurr(int add) { bus_curr_on_board += add; }
         public void SubToBusCurr(int sub) { bus_curr_on_board -= sub; }
+        public void AddToBusDist(double d) { distance_traveled += d; }
+        public void SubToBusDist(double d) { distance_traveled -= d; }
         public bool AddGroupToBus(Group g) {
             if ((g.GetSizeOf() + GetBusCurr()) <= bus_capacity) {
                 groups_on_bus.Add(g);

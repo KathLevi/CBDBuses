@@ -10,13 +10,14 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace CBD {
     class GetDistances {
+        public static Graph<Tuple<string, string>> location_graph = new Graph<Tuple<string, string>>();
+
         public static Excel.Application my_excel = new Excel.Application();
         public static Excel.Workbook my_book = my_excel.Workbooks.Open(@"CBD\Locations.xlsx", 0, false, 5, "", "", 
             false, Excel.XlPlatform.xlWindows, "", true, false, 0, true, false, false);
         public static Excel.Sheets my_sheets = my_book.Worksheets;
         public static Excel.Worksheet locations = (Excel.Worksheet)my_sheets.Item["Sheet1"];
-        public static Graph<Tuple<string, string>> location_graph = new Graph<Tuple<string, string>>();
-
+        
         public double GetDistanceFromTo(string origin, string destination) {
             System.Threading.Thread.Sleep(1000);
             double distance = 0;
