@@ -1,0 +1,16 @@
+C:\Users\klevi18\Desktop\CBDBuses\CBD\bin\Debug\CBD.exe.config
+C:\Users\klevi18\Desktop\CBDBuses\CBD\obj\Debug\CBD.csprojResolveAssemblyReference.cache
+C:\Users\klevi18\Desktop\CBDBuses\CBD\obj\Debug\MainWindow.g.cs
+C:\Users\klevi18\Desktop\CBDBuses\CBD\obj\Debug\App.g.cs
+C:\Users\klevi18\Desktop\CBDBuses\CBD\obj\Debug\CBD_MarkupCompile.cache
+C:\Users\klevi18\Desktop\CBDBuses\CBD\obj\Debug\CBD_MarkupCompile.lref
+C:\Users\klevi18\Desktop\CBDBuses\CBD\bin\Debug\CBD.exe
+C:\Users\klevi18\Desktop\CBDBuses\CBD\bin\Debug\CBD.pdb
+C:\Users\klevi18\Desktop\CBDBuses\CBD\bin\Debug\Newtonsoft.Json.dll
+C:\Users\klevi18\Desktop\CBDBuses\CBD\bin\Debug\Newtonsoft.Json.xml
+C:\Users\klevi18\Desktop\CBDBuses\CBD\obj\Debug\MainWindow.baml
+C:\Users\klevi18\Desktop\CBDBuses\CBD\obj\Debug\CBD.g.resources
+C:\Users\klevi18\Desktop\CBDBuses\CBD\obj\Debug\CBD.Properties.Resources.resources
+C:\Users\klevi18\Desktop\CBDBuses\CBD\obj\Debug\CBD.csproj.GenerateResource.Cache
+C:\Users\klevi18\Desktop\CBDBuses\CBD\obj\Debug\CBD.exe
+C:\Users\klevi18\Desktop\CBDBuses\CBD\obj\Debug\CBD.pdb
