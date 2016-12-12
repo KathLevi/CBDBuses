@@ -6,10 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.IO;
 
 
 namespace CBD {
-    class GetDistances {
+    public static class GetDistances {
         public static Graph<Tuple<string, string>> location_graph = new Graph<Tuple<string, string>>();
 
         //Create COM Objects for everything that is referenced
@@ -18,7 +19,7 @@ namespace CBD {
         public static Excel._Worksheet locations = my_book.Sheets[1];
         public static Excel.Range xlRange = locations.UsedRange;
         
-        public double GetDistanceFromTo(string origin, string destination) {
+        public static double GetDistanceFromTo(string origin, string destination) {
             System.Threading.Thread.Sleep(1000);
             double distance = 0;
             string url = "http://maps.googleapis.com/maps/api/directions/json?origin=" + origin + "&destination=" + destination + "&sensor=false";
@@ -26,19 +27,19 @@ namespace CBD {
             string content = FileGetContents(requesturl);
             JObject o = JObject.Parse(content);
             try {
-                distance = (double)o.SelectToken("routes[0].legs[0].distance.value");
+                distance = Convert.ToDouble(o.SelectToken("routes[0].legs[0].distance.value"));
                 return distance;
             }
             catch { return distance; }
         }
         //Location Names must be in column A
-        public void InitializeGraphWithLocationsAndAddresses() {
+        public static void InitializeGraphWithLocationsAndAddresses() {
             Excel.Range my_location_range = locations.Range["A2:A41"];
-            int ctr = 2;
+            int ctr = 1;
             if (my_location_range != null) {
                 foreach (Excel.Range r in my_location_range) {
-                    string l = r.Value2;
-                    var cell_value = (string)(locations.Cells["B", ctr] as Excel.Range).Value2;
+                    string l = Convert.ToString(my_location_range.Cells[ctr, 1].Value2);
+                    string cell_value = Convert.ToString(my_location_range.Cells[ctr, 2].Value2);
                     Tuple<string, string> temp_tuple = new Tuple<string, string>(l, cell_value);
                     if (!(location_graph.Contains(temp_tuple)))
                         location_graph.AddNode(temp_tuple);
@@ -47,7 +48,7 @@ namespace CBD {
             }
         }
         //Requires a list of addresses to map locations and distances
-        public void InitializeLocationGraphWeights(List<string> l) {
+        public static void InitializeLocationGraphWeights() {
             foreach (GraphNode<Tuple<string, string>> g in location_graph.GetNodeSet()) {
                 foreach (GraphNode<Tuple<string, string>> h in location_graph.GetNodeSet()) {
                     if (!(g.Value.Item1 == h.Value.Item1))
@@ -55,7 +56,7 @@ namespace CBD {
                 }
             }
         }
-        protected string FileGetContents(string fileName) {
+        public static string FileGetContents(string fileName) {
             string sContents = string.Empty;
             string me = string.Empty;
             try {
@@ -65,13 +66,39 @@ namespace CBD {
                     sContents = System.Text.Encoding.ASCII.GetString(response);
                 }
                 else {
-                    System.IO.StreamReader sr = new System.IO.StreamReader(fileName);
+                    StreamReader sr = new StreamReader(fileName);
                     sContents = sr.ReadToEnd();
                     sr.Close();
                 }
             }
             catch { sContents = "unable to connect to server "; }
             return sContents;
+        }
+
+        public static void WriteToFile()
+        {
+            string FileName = "Distances.txt";
+            string PathString = (Environment.CurrentDirectory + "DistFolder");
+            Directory.CreateDirectory(PathString);
+            PathString = Path.Combine(PathString, FileName);
+
+            if (!File.Exists(PathString))
+            {
+                using (StreamWriter fs = new StreamWriter(PathString, true))
+                {
+                    foreach(Tuple<string, string> g_node in location_graph)
+                    {
+                        string temp_string = g_node.Item1.ToString() + " " + g_node.Item2.ToString();
+                        fs.WriteLine(temp_string);
+                    }
+                }
+            }
+            else
+            {
+                //Console.WriteLine("File \"{0}\" already exists.", FileName);
+                return;
+            }
+
         }
     }
 }

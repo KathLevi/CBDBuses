@@ -12,12 +12,11 @@ namespace CBD
         private List<Bus> buses = new List<Bus>();
         private List<Group> groups = new List<Group>();
 
+        //Create COM Objects for everything that is referenced
         public static Excel.Application my_excel = new Excel.Application();
-        public static Excel.Workbook my_book = my_excel.Workbooks.Open(@"CBD\Locations.xlsx", 0, false, 5, "", "",
-            false, Excel.XlPlatform.xlWindows, "", true, false, 0, true, false, false);
-        public static Excel.Sheets my_sheets = my_book.Worksheets;
-        public static Excel.Worksheet my_groups = (Excel.Worksheet)my_sheets.Item["Sheet1"];
-        public static Excel.Worksheet my_buses = (Excel.Worksheet)my_sheets.Item["Sheet2"];
+        public static Excel.Workbook my_book = my_excel.Workbooks.Open(Environment.CurrentDirectory + "\\Locations.xlsx");
+        public static Excel._Worksheet my_groups = my_book.Sheets[1];
+        public static Excel._Worksheet my_buses = my_book.Sheets[2];
 
 
         public void InitializeGroups() {
@@ -40,5 +39,10 @@ namespace CBD
                 buses.Add(b);
             }
         }
-   }
+        private void CloseExcel()
+        {
+            my_book.Close(true, null, null);
+            my_excel.Quit();
+        }
+    }
 }

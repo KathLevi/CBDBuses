@@ -20,6 +20,7 @@ using Excel = Microsoft.Office.Interop.Excel;
  * make sure that the graph is being populated correctly
  * output results into the \\Locations.xlsx file in the directory folder
  * finish backwkr_DoWork function
+ * put the distances into a file so that we do not have to continue querying from GoogleMaps
  */
 
 namespace CBD
@@ -35,6 +36,7 @@ namespace CBD
         {
             InitializeComponent();
             InitializeBackgroundWorker();
+        
 
         }
        
@@ -91,19 +93,36 @@ namespace CBD
             }
             else
             {
-                //Nearest Neighbor algorithm??? or something similar??
-                //v = {1, ..., n-1}
-                //U = {0}
-                //while destinations not empty
+                GetDistances.InitializeGraphWithLocationsAndAddresses();
+                GetDistances.InitializeLocationGraphWeights();
+                GetDistances.WriteToFile();
+
+                
+                /*
+                    * find all dup locations and put them on the same bus
+                    * find areas that are dense (groups that have 3 nodes of small distances)
+                    * run algorithm
+                */
+
+                /*
+                 * Start at Whitworth
+                 * Choose nearest unvisisted vertex(Repeat.)
+                 * Return to start when done
+                 */
+
+                //Nearest Neighbor algorithm
+                    //U = {0}
+                    //while destinations not empty
                     //u = most recently added vertex to U
                     //find vertex v in V closest to u
                     //add v to U and remove v from V
+                
                 //update the progress bar
-                            //System.Threading.Thread.Sleep(500);       //Not quite sure what this does yet ?????
-                            //backwkr.ReportProgress(i * 10);
+                    //System.Threading.Thread.Sleep(500);
+                    //backwkr.ReportProgress(i * 10);
 
+                //update excel sheet 2 with final algorithm info
             }
-            
         }
 
         private void backwkr_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -162,18 +181,18 @@ namespace CBD
 
             for (int i = 3; i < 21; i++)
             {                
-                row.Add(new CBD.Results()
+                row.Add(new CBD.Results()       //add a row from the Buses excel sheet to the datagrid
                 {
-                    busNum = Convert.ToString(xlRange.Cells[i, 1].Value2),
-                    busCap = Convert.ToString(xlRange.Cells[i, 2].Value2),
-                    loc1 = Convert.ToString(xlRange.Cells[i, 4].Value2),
-                    group1 = Convert.ToString(xlRange.Cells[i, 6].Value2),
-                    loc2 = Convert.ToString(xlRange.Cells[i, 8].Value2),
-                    group2 = Convert.ToString(xlRange.Cells[i, 10].Value2),
-                    loc3 = Convert.ToString(xlRange.Cells[i, 12].Value2),
-                    group3 = Convert.ToString(xlRange.Cells[i, 14].Value2),
-                    numOnBus = calc(i, true),
-                    remaining = calc(i, false)
+                    busNum = Convert.ToString(xlRange.Cells[i, 1].Value2),      //A
+                    busCap = Convert.ToString(xlRange.Cells[i, 2].Value2),      //B
+                    loc1 = Convert.ToString(xlRange.Cells[i, 4].Value2),        //D
+                    group1 = Convert.ToString(xlRange.Cells[i, 6].Value2),      //F
+                    loc2 = Convert.ToString(xlRange.Cells[i, 8].Value2),        //H
+                    group2 = Convert.ToString(xlRange.Cells[i, 10].Value2),     //J
+                    loc3 = Convert.ToString(xlRange.Cells[i, 12].Value2),       //L
+                    group3 = Convert.ToString(xlRange.Cells[i, 14].Value2),     //N
+                    numOnBus = calc(i, true),                                   //S
+                    remaining = calc(i, false)                                  //T
                 });
             }
             return row;
@@ -185,6 +204,7 @@ namespace CBD
             xlApp.Quit();
         }
 
+        //calculate the num on bus and remaining humans
         public string calc(int i, bool check)
         {
             int value, cap, bus;
