@@ -17,8 +17,8 @@ namespace CBD {
         public static Excel.Application my_excel = new Excel.Application();
         public static Excel.Workbook my_book = my_excel.Workbooks.Open(Environment.CurrentDirectory + "\\Locations.xlsx");
         public static Excel._Worksheet locations = my_book.Sheets[1];
-        public static Excel.Range xlRange = locations.UsedRange;
-        
+        public static Excel._Worksheet data = my_book.Sheets[3];
+        public static Excel.Range dRange = data.UsedRange;
         public static double GetDistanceFromTo(string origin, string destination) {
             System.Threading.Thread.Sleep(1000);
             double distance = 0;
@@ -34,7 +34,7 @@ namespace CBD {
         }
         //Location Names must be in column A
         public static void InitializeGraphWithLocationsAndAddresses() {
-            Excel.Range my_location_range = locations.Range["A2:A41"];
+            Excel.Range my_location_range = locations.Range["A2:A6"];
             int ctr = 1;
             if (my_location_range != null) {
                 foreach (Excel.Range r in my_location_range) {
@@ -49,10 +49,18 @@ namespace CBD {
         }
         //Requires a list of addresses to map locations and distances
         public static void InitializeLocationGraphWeights() {
+            
             foreach (GraphNode<Tuple<string, string>> g in location_graph.GetNodeSet()) {
                 foreach (GraphNode<Tuple<string, string>> h in location_graph.GetNodeSet()) {
                     if (!(g.Value.Item1 == h.Value.Item1))
+                    {
                         location_graph.AddDirectedEdge(g, h, GetDistanceFromTo(g.Value.Item2, h.Value.Item2));
+                        
+                        
+                            //Here is where you would write to the excel spreadsheet using g and h as input data
+                            
+                        
+                    }
                 }
             }
         }
@@ -75,30 +83,5 @@ namespace CBD {
             return sContents;
         }
 
-        public static void WriteToFile()
-        {
-            string FileName = "Distances.txt";
-            string PathString = (Environment.CurrentDirectory + "DistFolder");
-            Directory.CreateDirectory(PathString);
-            PathString = Path.Combine(PathString, FileName);
-
-            if (!File.Exists(PathString))
-            {
-                using (StreamWriter fs = new StreamWriter(PathString, true))
-                {
-                    foreach(Tuple<string, string> g_node in location_graph)
-                    {
-                        string temp_string = g_node.Item1.ToString() + " " + g_node.Item2.ToString();
-                        fs.WriteLine(temp_string);
-                    }
-                }
-            }
-            else
-            {
-                //Console.WriteLine("File \"{0}\" already exists.", FileName);
-                return;
-            }
-
-        }
     }
 }
