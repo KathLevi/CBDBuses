@@ -95,7 +95,6 @@ namespace CBD
             {
                 GetDistances.InitializeGraphWithLocationsAndAddresses();
                 GetDistances.InitializeLocationGraphWeights();
-                GetDistances.WriteToFile();
 
                 
                 /*

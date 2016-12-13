@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.Reflection;
+using Microsoft.Office.Core;
 using System.IO;
 
 
@@ -34,7 +36,7 @@ namespace CBD {
         }
         //Location Names must be in column A
         public static void InitializeGraphWithLocationsAndAddresses() {
-            Excel.Range my_location_range = locations.Range["A2:A6"];
+            Excel.Range my_location_range = locations.Range["A2:A42"];
             int ctr = 1;
             if (my_location_range != null) {
                 foreach (Excel.Range r in my_location_range) {
@@ -49,20 +51,24 @@ namespace CBD {
         }
         //Requires a list of addresses to map locations and distances
         public static void InitializeLocationGraphWeights() {
-            
-            foreach (GraphNode<Tuple<string, string>> g in location_graph.GetNodeSet()) {
+            double dist = 0;
+            int i = 2;
+            foreach (GraphNode<Tuple<string, string>> g in location_graph.GetNodeSet()){
                 foreach (GraphNode<Tuple<string, string>> h in location_graph.GetNodeSet()) {
                     if (!(g.Value.Item1 == h.Value.Item1))
                     {
-                        location_graph.AddDirectedEdge(g, h, GetDistanceFromTo(g.Value.Item2, h.Value.Item2));
-                        
-                        
-                            //Here is where you would write to the excel spreadsheet using g and h as input data
-                            
-                        
+                        //add to location graph
+                        dist = GetDistanceFromTo(g.Value.Item2, h.Value.Item2);
+                        location_graph.AddDirectedEdge(g, h, dist);
+                        //add to excel sheet[3]
+                        data.Cells[i, "A"] = g.Value.Item2;
+                        data.Cells[i, "B"] = h.Value.Item2;
+                        data.Cells[i, "C"] = dist;
+                        i++;
                     }
                 }
             }
+            closeExcel();
         }
         public static string FileGetContents(string fileName) {
             string sContents = string.Empty;
@@ -81,6 +87,19 @@ namespace CBD {
             }
             catch { sContents = "unable to connect to server "; }
             return sContents;
+        }
+
+        public static void closeExcel()
+        {
+            try
+            {
+                my_book.Save();
+                my_book.Close(true, null, null);
+            }
+            finally
+            {
+                if (my_excel != null) { my_excel.Quit(); }
+            }
         }
 
     }
