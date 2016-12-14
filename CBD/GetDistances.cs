@@ -6,8 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
-using System.Reflection;
-using Microsoft.Office.Core;
 using System.IO;
 
 
@@ -17,7 +15,7 @@ namespace CBD {
 
         //Create COM Objects for everything that is referenced
         public static Excel.Application my_excel = new Excel.Application();
-        public static Excel.Workbook my_book = my_excel.Workbooks.Open(Environment.CurrentDirectory + "\\Locations.xlsx");
+        public static Excel.Workbook my_book = my_excel.Workbooks.Open(Environment.CurrentDirectory + "\\Locations.xlsx", 0, false);
         public static Excel._Worksheet locations = my_book.Sheets[1];
         public static Excel._Worksheet data = my_book.Sheets[3];
         public static Excel.Range dRange = data.UsedRange;
@@ -52,18 +50,19 @@ namespace CBD {
         //Requires a list of addresses to map locations and distances
         public static void InitializeLocationGraphWeights() {
             double dist = 0;
-            int i = 2;
-            foreach (GraphNode<Tuple<string, string>> g in location_graph.GetNodeSet()){
+            double i = 2;
+
+            foreach (GraphNode<Tuple<string, string>> g in location_graph.GetNodeSet()) {
                 foreach (GraphNode<Tuple<string, string>> h in location_graph.GetNodeSet()) {
                     if (!(g.Value.Item1 == h.Value.Item1))
                     {
                         //add to location graph
                         dist = GetDistanceFromTo(g.Value.Item2, h.Value.Item2);
                         location_graph.AddDirectedEdge(g, h, dist);
-                        //add to excel sheet[3]
-                        data.Cells[i, "A"] = g.Value.Item2;
-                        data.Cells[i, "B"] = h.Value.Item2;
-                        data.Cells[i, "C"] = dist;
+                        //add to excel sheet 3
+                        data.Cells[i, 1] = g.Value.Item2;
+                        data.Cells[i, 2] = h.Value.Item2;
+                        data.Cells[i, 3] = dist;
                         i++;
                     }
                 }
@@ -94,7 +93,7 @@ namespace CBD {
             try
             {
                 my_book.Save();
-                my_book.Close(true, null, null);
+                my_book.Close();
             }
             finally
             {

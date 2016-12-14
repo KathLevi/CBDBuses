@@ -95,7 +95,6 @@ namespace CBD
             {
                 GetDistances.InitializeGraphWithLocationsAndAddresses();
                 GetDistances.InitializeLocationGraphWeights();
-
                 
                 /*
                     * find all dup locations and put them on the same bus
